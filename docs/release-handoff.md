@@ -1,6 +1,47 @@
-# UIQA v0.1.0 Release Handoff
+# UIQA Release Handoff
 
-This document is the final operator handoff for publishing UIQA v0.1.0.
+This document tracks UIQA release operations.
+
+## v0.1.1 Current State
+
+- Package: `@insannurjaman/uiqa`
+- Version: `0.1.1`
+- Release purpose: patch npm package metadata so the `uiqa` binary is preserved during publish
+- GitHub release title: `UIQA v0.1.1 — npm package metadata fix`
+- GitHub release body: see `docs/release-v0.1.1.md`
+- npm publish status: pending verification and publish
+- npm package verification: pending `npm view @insannurjaman/uiqa@0.1.1 version`
+- Tag `v0.1.1`: pending creation after verification
+- Product behavior: no rule, scanner, reporter, or GitHub Action behavior changes from v0.1.0
+
+## v0.1.1 Publish Plan
+
+```bash
+pnpm install
+pnpm typecheck
+pnpm test
+pnpm build
+pnpm uiqa scan --path ./examples --format markdown
+pnpm uiqa scan --path ./examples --format json
+pnpm pack --dry-run
+git tag v0.1.1
+git push origin main
+git push origin v0.1.1
+npm whoami
+npm view @insannurjaman/uiqa@0.1.1 version
+npm publish --access public
+npm view @insannurjaman/uiqa@0.1.1 version
+```
+
+If npm requires OTP, publish with:
+
+```bash
+npm publish --access public --otp <one-time-password>
+```
+
+## v0.1.0 Historical State
+
+This section preserves the final operator handoff for UIQA v0.1.0.
 
 ## Current State
 

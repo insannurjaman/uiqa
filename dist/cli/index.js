@@ -953,7 +953,7 @@ function formatJson(result) {
 
 // src/cli/index.ts
 var program = new Command();
-program.name("uiqa").description("UI/UX QA checks for modern front-end projects.").version("0.1.0");
+program.name("uiqa").description("UI/UX QA checks for modern front-end projects.").version("0.1.1");
 program.command("scan").description("Scan a front-end project for UI/UX QA risks.").option("--path <path>", "Path to scan").option("--format <format>", "Report format: markdown or json", parseFormat).option("--output <file>", "Write the report to a file").option("--fail-on <severity>", "Exit with code 1 when findings meet this severity: low, medium, or high", parseSeverity).option("--config <file>", "Path to a UIQA config file").action(async (options) => {
   try {
     const cwd = process.cwd();

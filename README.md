@@ -73,7 +73,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: insannurjaman/uiqa@v0.1.0
+      - uses: insannurjaman/uiqa@v0.1.1
         with:
           path: ./src
           format: markdown
@@ -83,13 +83,13 @@ jobs:
 Write Markdown and JSON reports from separate jobs or steps:
 
 ```yaml
-- uses: insannurjaman/uiqa@v0.1.0
+- uses: insannurjaman/uiqa@v0.1.1
   with:
     path: ./src
     format: markdown
     output: uiqa-report.md
 
-- uses: insannurjaman/uiqa@v0.1.0
+- uses: insannurjaman/uiqa@v0.1.1
   with:
     path: ./src
     format: json
@@ -99,7 +99,7 @@ Write Markdown and JSON reports from separate jobs or steps:
 Fail CI only on high severity findings:
 
 ```yaml
-- uses: insannurjaman/uiqa@v0.1.0
+- uses: insannurjaman/uiqa@v0.1.1
   with:
     path: ./src
     format: markdown

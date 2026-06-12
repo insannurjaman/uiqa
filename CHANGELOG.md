@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.1.1
+
+Patch release for npm publication readiness.
+
+### Fixed
+
+- Fixed npm CLI binary metadata so the `uiqa` command is preserved during publish.
+- Verified package binary installation from the packed tarball.
+- Prepared the first npm-ready UIQA package after the blocked v0.1.0 publish attempt.
+
 ## v0.1.0
 
 Initial public release.

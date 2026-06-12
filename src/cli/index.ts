@@ -9,7 +9,7 @@ import { formatMarkdown } from "../reporters/markdown.js";
 
 const program = new Command();
 
-program.name("uiqa").description("UI/UX QA checks for modern front-end projects.").version("0.1.0");
+program.name("uiqa").description("UI/UX QA checks for modern front-end projects.").version("0.1.1");
 
 program
   .command("scan")

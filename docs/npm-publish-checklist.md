@@ -1,10 +1,10 @@
 # npm Publish Checklist
 
-Package: `@insannurjaman/uiqa@0.1.0`
+Package: `@insannurjaman/uiqa@0.1.1`
 
 ## Authentication
 
-This environment was not authenticated with npm during release preparation. `npm whoami` returned an authentication error.
+This environment is authenticated with npm, but publishing may require npm 2FA or a granular token that can bypass 2FA for publish.
 
 Before publishing:
 
@@ -41,7 +41,7 @@ The package `files` field intentionally excludes generated Markdown reports unde
 Latest local dry-run result:
 
 ```txt
-package: @insannurjaman/uiqa@0.1.0
+package: @insannurjaman/uiqa@0.1.1
 Tarball Contents
 action.yml
 CHANGELOG.md
@@ -53,7 +53,7 @@ LICENSE
 package.json
 README.md
 Tarball Details
-insannurjaman-uiqa-0.1.0.tgz
+insannurjaman-uiqa-0.1.1.tgz
 ```
 
 ## Publish
@@ -67,5 +67,5 @@ npm publish --access public
 Confirm the published version:
 
 ```bash
-npm view @insannurjaman/uiqa@0.1.0 version
+npm view @insannurjaman/uiqa@0.1.1 version
 ```
