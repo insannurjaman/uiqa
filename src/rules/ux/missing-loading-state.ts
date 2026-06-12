@@ -32,19 +32,6 @@ export const missingLoadingStateRule: Rule = {
             )
           );
         }
-      },
-      Identifier(path: NodePath<t.Identifier>) {
-        if (/^(data|items|results|products|users|orders)$/.test(path.node.name) && /props|interface|type/.test(context.source.toLowerCase())) {
-          findings.push(
-            createRuleFinding(
-              missingLoadingStateRule,
-              context,
-              path.node,
-              "This component receives data-like props but has no visible loading state.",
-              "Accept and render an explicit loading or pending state for async data."
-            )
-          );
-        }
       }
     });
 

@@ -1,0 +1,53 @@
+name: UIQA
+description: Run deterministic UI/UX QA checks for front-end pull requests.
+author: insannurjaman
+
+branding:
+  icon: check-circle
+  color: blue
+
+inputs:
+  path:
+    description: Path to scan.
+    required: false
+    default: "."
+  format:
+    description: Report format. Use markdown or json.
+    required: false
+    default: markdown
+  output:
+    description: Optional report output file path.
+    required: false
+    default: ""
+  fail-on:
+    description: Optional severity threshold that fails the job. Use low, medium, or high.
+    required: false
+    default: ""
+  config:
+    description: Optional path to uiqa.config.json.
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Run UIQA
+      shell: bash
+      run: |
+        set -euo pipefail
+
+        args=(scan --path "${{ inputs.path }}" --format "${{ inputs.format }}")
+
+        if [ -n "${{ inputs.output }}" ]; then
+          args+=(--output "${{ inputs.output }}")
+        fi
+
+        if [ -n "${{ inputs.fail-on }}" ]; then
+          args+=(--fail-on "${{ inputs.fail-on }}")
+        fi
+
+        if [ -n "${{ inputs.config }}" ]; then
+          args+=(--config "${{ inputs.config }}")
+        fi
+
+        node "$GITHUB_ACTION_PATH/dist/cli/index.js" "${args[@]}"

@@ -1,68 +1,123 @@
 # UIQA
 
+[![CI](https://github.com/insannurjaman/uiqa/actions/workflows/ci.yml/badge.svg)](https://github.com/insannurjaman/uiqa/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/@insannurjaman/uiqa.svg)](https://www.npmjs.com/package/@insannurjaman/uiqa)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 UIQA is an open-source UI/UX QA CLI and GitHub Action for modern front-end teams.
 
 It reviews product experience quality in code changes. The core engine is deterministic, testable, and useful without AI.
 
-## Project Status
-
-UIQA is in early v0.1 development. Expect the rule set and config shape to evolve while the project finds its first stable release.
-
-## Installation
-
-Installation instructions will be finalized once the package is published.
+## Quick Start In 60 Seconds
 
 ```bash
-pnpm add -D uiqa
+pnpm add -D @insannurjaman/uiqa
+pnpm exec uiqa scan --path ./src --format markdown
 ```
 
-## Usage
-
-Run a scan from the current directory:
+Fail CI only when high severity findings are present:
 
 ```bash
-uiqa scan
+pnpm exec uiqa scan --path ./src --fail-on high
 ```
 
-Scan a specific path:
+Generate a Markdown report:
 
 ```bash
-uiqa scan --path ./src
+pnpm exec uiqa scan --path ./src --format markdown --output uiqa-report.md
 ```
 
-Print JSON instead of Markdown:
+Generate a JSON report:
 
 ```bash
-uiqa scan --format json
+pnpm exec uiqa scan --path ./src --format json --output uiqa-report.json
 ```
 
-Write a report to disk:
+## GitHub Action
 
-```bash
-uiqa scan --output uiqa-report.md
+Use UIQA in pull requests:
+
+```yaml
+name: UIQA
+
+on:
+  pull_request:
+
+jobs:
+  uiqa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: insannurjaman/uiqa@v0.1.0
+        with:
+          path: ./src
+          format: markdown
+          fail-on: high
 ```
 
-Fail CI when medium or high severity findings are present:
+Write Markdown and JSON reports from separate jobs or steps:
 
-```bash
-uiqa scan --fail-on medium
+```yaml
+- uses: insannurjaman/uiqa@v0.1.0
+  with:
+    path: ./src
+    format: markdown
+    output: uiqa-report.md
+
+- uses: insannurjaman/uiqa@v0.1.0
+  with:
+    path: ./src
+    format: json
+    output: uiqa-report.json
 ```
 
-Use a config file:
+Supported Action inputs:
 
-```bash
-uiqa scan --config uiqa.config.json
-```
+- `path`: path to scan. Defaults to `.`.
+- `format`: `markdown` or `json`. Defaults to `markdown`.
+- `output`: optional report file path.
+- `fail-on`: optional severity threshold: `low`, `medium`, or `high`.
+- `config`: optional path to `uiqa.config.json`.
+
+## Why UIQA Exists
+
+Many teams catch syntax, accessibility, and visual token issues in CI, but product experience problems still slip through pull requests: missing empty states, no loading affordance, weak form recovery, checkout flows without trust cues, and mobile layouts that look fine on a desktop preview.
+
+UIQA is built for those review gaps. It is not a generic design linter. It checks deterministic UI/UX patterns that are practical to review in code.
+
+## Who UIQA Is For
+
+UIQA is for front-end teams building product interfaces in TypeScript, JavaScript, JSX, and TSX. It is especially useful for teams that:
+
+- Review product UI in pull requests.
+- Maintain a design system.
+- Ship dashboards, checkout flows, forms, search, and data-heavy screens.
+- Want deterministic checks before adding optional AI review.
+
+## How UIQA Differs
+
+- Accessibility linters focus on accessibility rules. UIQA includes basic accessibility checks but also reviews product states and recovery paths.
+- Design token validators catch raw visual values. UIQA includes that signal, then goes further into UX states.
+- Figma lint plugins inspect design files. UIQA inspects implementation code in pull requests.
+- Generic ESLint rules enforce code style and correctness. UIQA focuses on user experience risks visible in UI code.
 
 ## What UIQA Checks
 
-The first rules focus on small, practical product-experience issues:
+Current v0.1 rules include:
 
 - Missing image alt text.
 - Hardcoded hex colors that bypass design tokens.
 - Missing empty, loading, error, no-result, validation, confirmation, checkout recovery, and responsive layout states.
 
 See [docs/rules.md](docs/rules.md) for the current rule reference.
+
+## What UIQA Does Not Do Yet
+
+- It does not use AI.
+- It does not render pages in a browser.
+- It does not compare screenshots or Figma files.
+- It does not understand every framework-specific data loading API.
+- It does not replace accessibility testing, design reviews, product QA, or usability testing.
 
 ## Configuration
 
@@ -78,6 +133,27 @@ Create `uiqa.config.json` in your project root:
 ```
 
 CLI flags override config values.
+
+## Examples
+
+Run UIQA against the included examples:
+
+```bash
+pnpm build
+pnpm uiqa scan --path ./examples --format markdown
+pnpm uiqa scan --path ./examples/next-tailwind/src --format markdown
+```
+
+See [docs/examples.md](docs/examples.md) for details.
+
+## Roadmap To v0.2
+
+- Rule configuration and per-rule enable/disable controls.
+- Better framework-specific detection for Next.js and common data libraries.
+- GitHub Action annotations and PR summary comments.
+- More design-system consistency rules.
+- Lower-noise heuristics based on real project fixtures.
+- Optional AI adapters after the deterministic core is useful on its own.
 
 ## Local Development
 

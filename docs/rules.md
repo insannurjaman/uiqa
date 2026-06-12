@@ -2,6 +2,8 @@
 
 UIQA rules are deterministic static checks. They flag product experience risks that are easy to miss in pull requests.
 
+Each finding includes a severity, category, file path, message, and suggestion. Line and column are included when Babel location data is available.
+
 ## A11Y001 Image Missing Alt Text
 
 Images need text alternatives so assistive technology can explain meaningful visuals.

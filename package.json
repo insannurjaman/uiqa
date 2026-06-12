@@ -1,15 +1,27 @@
 {
-  "name": "uiqa",
+  "name": "@insannurjaman/uiqa",
   "version": "0.1.0",
   "description": "Open-source UI/UX QA CLI and GitHub Action for modern front-end teams.",
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "bin": {
     "uiqa": "./dist/cli/index.js"
   },
   "files": [
     "dist",
+    "docs",
+    "examples",
+    "action.yml",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "uiqa": "node dist/cli/index.js",
@@ -22,11 +34,28 @@
     "ui",
     "ux",
     "qa",
+    "cli",
+    "github-action",
+    "frontend",
+    "react",
+    "tsx",
     "accessibility",
-    "design-system"
+    "design-system",
+    "pull-request"
   ],
   "author": "",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/insannurjaman/uiqa.git"
+  },
+  "bugs": {
+    "url": "https://github.com/insannurjaman/uiqa/issues"
+  },
+  "homepage": "https://github.com/insannurjaman/uiqa#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@babel/parser": "^7.26.3",
     "@babel/traverse": "^7.26.4",
