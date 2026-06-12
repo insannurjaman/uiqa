@@ -12,7 +12,7 @@ This document tracks UIQA release operations.
 - GitHub release body: see `docs/release-v0.1.1.md`
 - Local tag `v0.1.1`: created
 - Remote tag `v0.1.1`: pushed to `origin`
-- GitHub release status: prepared only; `gh` is not installed in this environment
+- GitHub release status: published and marked as the latest public release
 - npm publish status: published
 - npm auth status: `npm whoami` returns `insannurjaman`
 - npm package verification: `npm view @insannurjaman/uiqa@0.1.1 version` returns `0.1.1`
@@ -20,6 +20,7 @@ This document tracks UIQA release operations.
 - Package source: published from tag `v0.1.1`
 - Package smoke test: passed from the public npm package; `npm install @insannurjaman/uiqa@0.1.1` and `npx uiqa --help` both worked
 - Repeated publish result: npm rejects another `npm publish --access public` for `0.1.1` because published versions cannot be overwritten
+- Latest public release: `v0.1.1`
 - Product behavior: no rule, scanner, reporter, or GitHub Action behavior changes from v0.1.0
 
 ## v0.1.1 Verification Snapshot
@@ -61,15 +62,13 @@ npm install @insannurjaman/uiqa@0.1.1
 npx uiqa --help
 ```
 
-## v0.1.1 Manual GitHub Release Steps
+## v0.1.1 GitHub Release
 
-Use these steps because GitHub CLI is unavailable in this environment.
+GitHub Release `v0.1.1` has been published and marked as the latest release.
 
-1. Open `https://github.com/insannurjaman/uiqa/releases/new`.
-2. Select existing tag `v0.1.1`.
-3. Release title: `UIQA v0.1.1 — npm package metadata fix`.
-4. Paste the release body from `docs/release-v0.1.1.md`.
-5. Publish as a normal release.
+- Release URL: `https://github.com/insannurjaman/uiqa/releases/tag/v0.1.1`
+- Release title: `UIQA v0.1.1 — npm package metadata fix`
+- Release body source: `docs/release-v0.1.1.md`
 
 ## v0.1.0 Historical State
 

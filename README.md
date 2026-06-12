@@ -4,15 +4,31 @@
 [![npm](https://img.shields.io/npm/v/@insannurjaman/uiqa.svg)](https://www.npmjs.com/package/@insannurjaman/uiqa)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-UIQA is an open-source UI/UX QA CLI and GitHub Action for modern front-end teams.
+UIQA catches product UX issues in pull requests before users do.
 
-It reviews product experience quality in code changes. The core engine is deterministic, testable, and useful without AI.
+UIQA is an open-source UI/UX QA CLI and GitHub Action for modern front-end teams. It reviews implementation code for missing empty states, loading states, error recovery, form feedback, checkout trust cues, mobile layout risks, hardcoded visual values, and basic accessibility gaps.
+
+It is not a generic design linter. The core engine is deterministic, testable, and useful without AI.
 
 ## Project Status
 
-UIQA is early v0.1 software. The CLI, rule API, and GitHub Action are ready to try in pull requests, while rule heuristics will keep improving with real project fixtures.
+UIQA is early v0.1 software. The latest public release is `v0.1.1`, published on npm as `@insannurjaman/uiqa`. The CLI, rule API, and GitHub Action are ready to try in pull requests, while rule heuristics will keep improving with real project fixtures.
 
 ## Quick Start In 60 Seconds
+
+Install UIQA:
+
+```bash
+npm install -D @insannurjaman/uiqa
+```
+
+Run a scan:
+
+```bash
+npx uiqa scan --path ./src --format markdown
+```
+
+Or with pnpm:
 
 ```bash
 pnpm add -D @insannurjaman/uiqa
@@ -35,6 +51,17 @@ Generate a JSON report:
 
 ```bash
 pnpm exec uiqa scan --path ./src --format json --output uiqa-report.json
+```
+
+Use it in GitHub Actions:
+
+```yaml
+- uses: actions/checkout@v4
+- uses: insannurjaman/uiqa@v0.1.1
+  with:
+    path: ./src
+    format: markdown
+    fail-on: high
 ```
 
 ## CLI Usage
@@ -116,25 +143,29 @@ Supported Action inputs:
 
 ## Why UIQA Exists
 
-Many teams catch syntax, accessibility, and visual token issues in CI, but product experience problems still slip through pull requests: missing empty states, no loading affordance, weak form recovery, checkout flows without trust cues, and mobile layouts that look fine on a desktop preview.
+Most CI checks answer code questions: does it compile, does it format, does it violate an accessibility rule, did tests pass? Product teams still lose time on a different class of issues: a table has no empty state, a dashboard fetches data without loading or error recovery, a destructive action has no confirmation, a payment flow has no trust cue, or a layout only works on a desktop-sized review screen.
 
-UIQA is built for those review gaps. It is not a generic design linter. It checks deterministic UI/UX patterns that are practical to review in code.
+UIQA exists for that pull request gap. It checks deterministic UI/UX patterns that are practical to review in code, before the issue reaches a designer, QA pass, or user report.
 
 ## Who UIQA Is For
 
-UIQA is for front-end teams building product interfaces in TypeScript, JavaScript, JSX, and TSX. It is especially useful for teams that:
+UIQA is for people who review and maintain product UI, especially in open-source and fast-moving frontend teams:
 
-- Review product UI in pull requests.
-- Maintain a design system.
-- Ship dashboards, checkout flows, forms, search, and data-heavy screens.
-- Want deterministic checks before adding optional AI review.
+- Frontend engineers who want actionable UX checks in CI.
+- Design-system maintainers who want implementation drift surfaced early.
+- OSS maintainers who need lightweight review help without paid services.
+- Teams shipping dashboards, checkout flows, forms, search, and data-heavy screens.
+- Teams that want deterministic checks before adding optional AI review.
 
 ## How UIQA Differs
 
-- Accessibility linters focus on accessibility rules. UIQA includes basic accessibility checks but also reviews product states and recovery paths.
-- Design token validators catch raw visual values. UIQA includes that signal, then goes further into UX states.
-- Figma lint plugins inspect design files. UIQA inspects implementation code in pull requests.
-- Generic ESLint rules enforce code style and correctness. UIQA focuses on user experience risks visible in UI code.
+UIQA is not a generic design linter, and it is not trying to replace existing tools.
+
+- Accessibility linters focus on accessibility rule coverage. UIQA includes basic accessibility checks, then also reviews product states and recovery paths.
+- Design token validators catch raw visual values. UIQA includes that signal, then connects it to broader product quality risks.
+- Figma lint plugins inspect design files. UIQA inspects implementation code where pull requests actually change user behavior.
+- Generic ESLint rules enforce code style and correctness. UIQA focuses on user experience risks visible in JSX/TSX.
+- Manual design review catches nuance. UIQA catches repeatable omissions so reviewers can spend attention on the hard parts.
 
 ## What UIQA Checks
 
@@ -210,6 +241,13 @@ pnpm uiqa scan --path ./examples/next-tailwind/src --format markdown
 ```
 
 See [docs/examples.md](docs/examples.md) for details.
+
+## OSS Project Context
+
+- [Project impact](docs/project-impact.md)
+- [Demo script](docs/demo-script.md)
+- [Good first issues](docs/good-first-issues.md)
+- [Maintainer notes](docs/maintainer-notes.md)
 
 ## Roadmap To v0.2
 
