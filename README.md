@@ -167,6 +167,15 @@ UIQA is not a generic design linter, and it is not trying to replace existing to
 - Generic ESLint rules enforce code style and correctness. UIQA focuses on user experience risks visible in JSX/TSX.
 - Manual design review catches nuance. UIQA catches repeatable omissions so reviewers can spend attention on the hard parts.
 
+## Capabilities
+
+- UX capabilities: detects missing empty states, loading states, error recovery, no-result states, form feedback, destructive action confirmation, checkout trust cues, and mobile layout risks.
+- Accessibility capabilities: detects missing image alt text and interactive elements without accessible labels.
+- Design-system capabilities: detects hardcoded hex colors and inconsistent spacing or token usage.
+- Output capabilities: produces Markdown and JSON reports with scores, severity and category summaries, file locations, suggestions, CI fail thresholds, and GitHub Action support.
+
+For detailed rule behavior, see [docs/rules.md](docs/rules.md).
+
 ## What UIQA Checks
 
 Current v0.1 rules include:
