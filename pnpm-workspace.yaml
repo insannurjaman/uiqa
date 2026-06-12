@@ -1,0 +1,6 @@
+minimumReleaseAge: 0
+confirmModulesPurge: false
+onlyBuiltDependencies:
+  - esbuild
+allowBuilds:
+  esbuild: true
