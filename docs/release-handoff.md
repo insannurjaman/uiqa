@@ -13,10 +13,13 @@ This document tracks UIQA release operations.
 - Local tag `v0.1.1`: created
 - Remote tag `v0.1.1`: pushed to `origin`
 - GitHub release status: prepared only; `gh` is not installed in this environment
-- npm publish status: blocked by npm web authentication / 2FA during `npm publish --access public`
+- npm publish status: published
 - npm auth status: `npm whoami` returns `insannurjaman`
-- npm package verification: `npm view @insannurjaman/uiqa@0.1.1 version` returns `E404`, so it is not published yet
-- Package smoke test: passed from packed tarball; `npx uiqa --help` and `npx uiqa scan --path /Users/insannurjaman/Documents/Development/uiqa/examples --format markdown` both worked
+- npm package verification: `npm view @insannurjaman/uiqa@0.1.1 version` returns `0.1.1`
+- npm package metadata: `npm view @insannurjaman/uiqa name version bin` returns name `@insannurjaman/uiqa`, version `0.1.1`, and bin `{ uiqa: "dist/cli/index.js" }`
+- Package source: published from tag `v0.1.1`
+- Package smoke test: passed from the public npm package; `npm install @insannurjaman/uiqa@0.1.1` and `npx uiqa --help` both worked
+- Repeated publish result: npm rejects another `npm publish --access public` for `0.1.1` because published versions cannot be overwritten
 - Product behavior: no rule, scanner, reporter, or GitHub Action behavior changes from v0.1.0
 
 ## v0.1.1 Verification Snapshot
@@ -29,29 +32,33 @@ This document tracks UIQA release operations.
 - `pnpm uiqa scan --path ./examples --format json`: passed
 - `pnpm pack --dry-run`: passed
 - `npm publish --dry-run --access public`: passed without the previous `bin[uiqa]` warning
+- `npm view @insannurjaman/uiqa@0.1.1 version`: passed with `0.1.1`
+- Public install smoke test: passed with `npm install @insannurjaman/uiqa@0.1.1` and `npx uiqa --help`
 - Dry-run tarball: `insannurjaman-uiqa-0.1.1.tgz`
 - Packed manifest bin: `{ "uiqa": "dist/cli/index.js" }`
 
-## v0.1.1 Remaining Publish Steps
+## v0.1.1 Published Package Checks
 
 ```bash
 npm whoami
 npm view @insannurjaman/uiqa@0.1.1 version
-npm publish --access public
-npm view @insannurjaman/uiqa@0.1.1 version
+npm view @insannurjaman/uiqa name version bin
 ```
 
-If npm requires OTP, publish with:
+Expected version output:
 
-```bash
-npm publish --access public --otp <one-time-password>
+```txt
+0.1.1
 ```
 
-If npm starts a browser authentication flow, complete the npm browser approval and rerun:
+Fresh install smoke test:
 
 ```bash
-npm publish --access public
-npm view @insannurjaman/uiqa@0.1.1 version
+tmpdir="$(mktemp -d)"
+cd "$tmpdir"
+npm init -y
+npm install @insannurjaman/uiqa@0.1.1
+npx uiqa --help
 ```
 
 ## v0.1.1 Manual GitHub Release Steps
