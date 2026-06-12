@@ -9,10 +9,10 @@ This document is the final operator handoff for publishing UIQA v0.1.0.
 - Version: `0.1.0`
 - Local tag `v0.1.0`: created
 - Remote tag `v0.1.0`: pushed to `origin`
-- GitHub release: tag is available, release still requires GitHub UI because `gh` is not installed
-- npm package: prepared only, not published
+- GitHub release: published manually by the maintainer
+- npm package: publish attempted from tag `v0.1.0`, blocked by npm 2FA
 - GitHub CLI status: `gh` is not installed in this environment
-- npm auth status: `npm whoami` returns `ENEEDAUTH`
+- npm auth status: `npm whoami` returns `insannurjaman`
 - npm registry status: `@insannurjaman/uiqa@0.1.0` returns `E404`, so it is not published yet
 
 ## Release Links
@@ -32,6 +32,8 @@ This document is the final operator handoff for publishing UIQA v0.1.0.
 - `pnpm pack --dry-run`: passed
 - Dry-run tarball: `insannurjaman-uiqa-0.1.0.tgz`
 - Tag push: `v0.1.0` pushed to `origin`
+- Publish attempt: `npm publish --access public` from tag `v0.1.0` was blocked by npm 2FA
+- npm package verification: `npm view @insannurjaman/uiqa@0.1.0 version` still returns `E404`
 
 The dry-run package includes `dist`, docs, examples, `action.yml`, README, LICENSE, CHANGELOG, and `package.json`.
 
@@ -102,8 +104,8 @@ npm publish --access public
 Authentication and publish steps:
 
 ```bash
-npm login
 npm whoami
+git checkout v0.1.0
 pnpm install
 pnpm typecheck
 pnpm test
@@ -111,7 +113,25 @@ pnpm build
 pnpm pack --dry-run
 npm publish --access public
 npm view @insannurjaman/uiqa@0.1.0 version
+git checkout main
 ```
+
+Current publish blocker:
+
+```txt
+npm error 403 Forbidden - Two-factor authentication or granular access token with bypass 2fa enabled is required to publish packages.
+```
+
+To complete publishing, rerun `npm publish --access public` from tag `v0.1.0` and provide the required npm OTP when prompted, or use a granular npm access token configured to bypass 2FA for publish.
+
+The publish attempt also emitted this warning:
+
+```txt
+npm auto-corrected some errors in your package.json when publishing.
+"bin[uiqa]" script name dist/cli/index.js was invalid and removed
+```
+
+Before retrying publish, consider running `npm pkg fix` on a branch and publishing a corrected patch release if the npm-packed bin metadata is not acceptable. Do not move the existing `v0.1.0` tag.
 
 Expected post-publish `npm view` output:
 
