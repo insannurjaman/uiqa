@@ -31,7 +31,11 @@ describe("reporters", () => {
     const markdown = formatMarkdown(result, "/tmp/uiqa");
 
     expect(markdown).toContain("# UIQA Report");
+    expect(markdown).toContain("Score: 85/100");
     expect(markdown).toContain("Findings: 1");
+    expect(markdown).toContain("## Categories");
+    expect(markdown).toContain("## Findings By Severity");
+    expect(markdown).toContain("## Next Steps");
     expect(markdown).toContain("A11Y001");
     expect(markdown).toContain("App.tsx:1:20");
   });

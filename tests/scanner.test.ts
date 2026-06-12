@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { DEFAULT_CONFIG } from "../src/core/config.js";
 import { discoverFiles } from "../src/core/files.js";
 import { scan } from "../src/core/scanner.js";
+import { rules } from "../src/rules/index.js";
 import { createTempDir, writeFixture } from "./helpers.js";
 
 describe("scanner", () => {
@@ -40,5 +41,9 @@ describe("scanner", () => {
 
     expect(result.scannedFiles).toBe(1);
     expect(result.findings.map((finding) => finding.ruleId).sort()).toEqual(["A11Y001", "DS001"]);
+  });
+
+  it("includes the UX rule pack in the default registry", () => {
+    expect(rules.map((rule) => rule.id)).toEqual(expect.arrayContaining(["UX001", "UX002", "UX003", "UX004", "UX005", "UX006", "UX007", "UX008"]));
   });
 });

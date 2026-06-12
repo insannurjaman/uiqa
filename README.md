@@ -60,8 +60,9 @@ The first rules focus on small, practical product-experience issues:
 
 - Missing image alt text.
 - Hardcoded hex colors that bypass design tokens.
+- Missing empty, loading, error, no-result, validation, confirmation, checkout recovery, and responsive layout states.
 
-The roadmap includes checks for missing empty states, loading states, error states, form recovery, checkout trust signals, mobile layout risks, design-system consistency, and basic accessibility issues.
+See [docs/rules.md](docs/rules.md) for the current rule reference.
 
 ## Configuration
 
