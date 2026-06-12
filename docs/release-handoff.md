@@ -4,15 +4,22 @@ This document is the final operator handoff for publishing UIQA v0.1.0.
 
 ## Current State
 
-- Current commit: `3a2c6f373409c7c985300641c333f07d589f12ad`
+- Current release commit: `60f1e4bc1bf7262466b9ca199970944f05bf730f`
 - Package: `@insannurjaman/uiqa`
 - Version: `0.1.0`
-- Local tag `v0.1.0`: not present at handoff time
-- GitHub release: prepared only
-- npm package: prepared only
-- GitHub CLI status: `gh` was not installed in the release-prep environment
-- npm auth status: `npm whoami` returned `ENEEDAUTH`
-- npm registry status: `@insannurjaman/uiqa@0.1.0` returned `E404`, so it was not published at handoff time
+- Local tag `v0.1.0`: created
+- Remote tag `v0.1.0`: pushed to `origin`
+- GitHub release: tag is available, release still requires GitHub UI because `gh` is not installed
+- npm package: prepared only, not published
+- GitHub CLI status: `gh` is not installed in this environment
+- npm auth status: `npm whoami` returns `ENEEDAUTH`
+- npm registry status: `@insannurjaman/uiqa@0.1.0` returns `E404`, so it is not published yet
+
+## Release Links
+
+- Tag URL: `https://github.com/insannurjaman/uiqa/releases/tag/v0.1.0`
+- New release URL: `https://github.com/insannurjaman/uiqa/releases/new`
+- npm package URL after publish: `https://www.npmjs.com/package/@insannurjaman/uiqa/v/0.1.0`
 
 ## Verification Snapshot
 
@@ -24,6 +31,7 @@ This document is the final operator handoff for publishing UIQA v0.1.0.
 - Parsed JSON scan: `filesScanned: 21`, `score: 0`, `findings: 32`
 - `pnpm pack --dry-run`: passed
 - Dry-run tarball: `insannurjaman-uiqa-0.1.0.tgz`
+- Tag push: `v0.1.0` pushed to `origin`
 
 The dry-run package includes `dist`, docs, examples, `action.yml`, README, LICENSE, CHANGELOG, and `package.json`.
 
@@ -76,12 +84,12 @@ Use these steps if GitHub CLI is unavailable or unauthenticated.
 2. Click `Choose a tag`.
 3. Enter `v0.1.0`.
 4. Target branch: `main`.
-5. If GitHub says the tag does not exist, choose `Create new tag: v0.1.0 on publish`.
+5. Select existing tag `v0.1.0`.
 6. Release title: `UIQA v0.1.0 — Open-source UI/UX QA for pull requests`.
 7. Paste the exact release body from this document.
 8. Leave the release as a normal release, not a pre-release, unless you intentionally want to mark v0.1.0 as pre-release.
 9. Click `Publish release`.
-10. Confirm the release page shows tag `v0.1.0` and points to commit `3a2c6f373409c7c985300641c333f07d589f12ad` or a later intended release commit.
+10. Confirm the release page shows tag `v0.1.0` and points to commit `60f1e4bc1bf7262466b9ca199970944f05bf730f`.
 
 ## npm Publish
 
