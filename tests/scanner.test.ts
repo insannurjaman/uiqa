@@ -43,7 +43,9 @@ describe("scanner", () => {
     expect(result.findings.map((finding) => finding.ruleId).sort()).toEqual(["A11Y001", "DS001"]);
   });
 
-  it("includes the UX rule pack in the default registry", () => {
-    expect(rules.map((rule) => rule.id)).toEqual(expect.arrayContaining(["UX001", "UX002", "UX003", "UX004", "UX005", "UX006", "UX007", "UX008"]));
+  it("includes all release rules in the default registry", () => {
+    expect(rules.map((rule) => rule.id)).toEqual(
+      expect.arrayContaining(["A11Y001", "A11Y002", "DS001", "DS002", "UX001", "UX002", "UX003", "UX004", "UX005", "UX006", "UX007", "UX008"])
+    );
   });
 });

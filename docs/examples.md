@@ -25,6 +25,7 @@ Files ending in `Bad.tsx` intentionally trigger UIQA rules:
 
 - `CheckoutBad.tsx`: weak checkout trust and recovery cues.
 - `DashboardBad.tsx`: missing empty/loading/error states and mobile layout risk.
+- `DashboardBad.tsx`: also includes arbitrary spacing and an icon-only button to demonstrate design-system and accessibility findings.
 - `SearchBad.tsx`: search without no-result messaging.
 - `FormBad.tsx`: form without validation or helper feedback.
 

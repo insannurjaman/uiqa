@@ -17,7 +17,8 @@
   "files": [
     "dist",
     "docs",
-    "examples",
+    "examples/**/*.tsx",
+    "examples/**/*.jsx",
     "action.yml",
     "README.md",
     "LICENSE",

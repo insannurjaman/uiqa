@@ -35,6 +35,9 @@ export function DashboardGood() {
           </tbody>
         </table>
       </div>
+      <button aria-label="Open dashboard settings" className="mt-8 rounded border p-2">
+        <SettingsIcon />
+      </button>
     </main>
   );
 }

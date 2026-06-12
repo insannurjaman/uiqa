@@ -15,7 +15,7 @@ UIQA is a deterministic TypeScript CLI. It scans source files, parses JSX/TSX wi
 
 Rules return `Finding` objects with a rule id, title, severity, category, file path, optional location, message, and suggestion.
 
-The scanner returns `ScanResult`, which includes resolved config, scanned file count, and findings.
+The scanner returns `ScanResult`, which includes resolved config, scanned file count, and findings. The JSON reporter exposes a release-friendly shape with `filesScanned`, `score`, and `findings`.
 
 ## Rule Design
 

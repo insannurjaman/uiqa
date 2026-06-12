@@ -8,6 +8,10 @@ UIQA is an open-source UI/UX QA CLI and GitHub Action for modern front-end teams
 
 It reviews product experience quality in code changes. The core engine is deterministic, testable, and useful without AI.
 
+## Project Status
+
+UIQA is early v0.1 software. The CLI, rule API, and GitHub Action are ready to try in pull requests, while rule heuristics will keep improving with real project fixtures.
+
 ## Quick Start In 60 Seconds
 
 ```bash
@@ -32,6 +36,27 @@ Generate a JSON report:
 ```bash
 pnpm exec uiqa scan --path ./src --format json --output uiqa-report.json
 ```
+
+## CLI Usage
+
+```bash
+uiqa scan
+uiqa scan --path ./src
+uiqa scan --path ./examples
+uiqa scan --format markdown
+uiqa scan --format json
+uiqa scan --output uiqa-report.md
+uiqa scan --fail-on high
+uiqa scan --config uiqa.config.json
+```
+
+Default behavior:
+
+- Scans the current working directory.
+- Includes `.ts`, `.tsx`, `.js`, and `.jsx` files.
+- Ignores `node_modules`, `dist`, `build`, `.next`, and `coverage`.
+- Prints a Markdown report to the terminal.
+- Exits `0` unless `--fail-on` is provided and matching findings are present.
 
 ## GitHub Action
 
@@ -71,6 +96,16 @@ Write Markdown and JSON reports from separate jobs or steps:
     output: uiqa-report.json
 ```
 
+Fail CI only on high severity findings:
+
+```yaml
+- uses: insannurjaman/uiqa@v0.1.0
+  with:
+    path: ./src
+    format: markdown
+    fail-on: high
+```
+
 Supported Action inputs:
 
 - `path`: path to scan. Defaults to `.`.
@@ -105,11 +140,41 @@ UIQA is for front-end teams building product interfaces in TypeScript, JavaScrip
 
 Current v0.1 rules include:
 
-- Missing image alt text.
-- Hardcoded hex colors that bypass design tokens.
+- `A11Y001`: image missing alt text.
+- `A11Y002`: interactive element missing accessible label.
+- `DS001`: hardcoded hex colors that bypass design tokens.
+- `DS002`: inconsistent spacing token usage.
 - Missing empty, loading, error, no-result, validation, confirmation, checkout recovery, and responsive layout states.
 
 See [docs/rules.md](docs/rules.md) for the current rule reference.
+
+## Sample Report
+
+```markdown
+# UIQA Report
+
+Score: 84/100
+Scanned files: 12
+Findings: 2
+
+Severity: 1 high, 1 medium, 0 low
+
+## Categories
+
+- ux: 1
+- accessibility: 1
+
+## Findings By Severity
+
+### High (1)
+
+#### A11Y002: Interactive element missing accessible label
+
+- Category: accessibility
+- Location: src/components/IconButton.tsx:4:5
+- Message: Interactive elements need an accessible name so assistive technology can describe the action.
+- Suggestion: Add visible text, aria-label, aria-labelledby, or a title that clearly names the action.
+```
 
 ## What UIQA Does Not Do Yet
 

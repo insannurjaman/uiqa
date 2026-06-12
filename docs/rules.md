@@ -17,6 +17,20 @@ Acceptable patterns:
 - Use `alt="Dashboard showing checkout status"` for meaningful images.
 - Use `alt=""` only when the image is decorative.
 
+## A11Y002 Interactive Element Missing Accessible Label
+
+Icon-only controls need an accessible name so assistive technology can describe the action.
+
+Detects:
+
+- Buttons and links without visible text, `aria-label`, `aria-labelledby`, or `title`.
+- Elements with `role="button"` or `role="link"` that do not expose a label.
+
+Acceptable patterns:
+
+- Add visible text such as `Delete project`.
+- Add `aria-label="Delete project"` for icon-only controls.
+
 ## DS001 Hardcoded Hex Color
 
 Raw hex colors bypass design tokens and make visual updates harder to apply consistently.
@@ -28,6 +42,19 @@ Detects:
 Acceptable patterns:
 
 - Use a design token, CSS variable, or shared theme value.
+
+## DS002 Inconsistent Spacing Token Usage
+
+Raw spacing values make product rhythm harder to maintain across screens and design-system updates.
+
+Detects:
+
+- Inline spacing styles such as `padding: 18` or `marginTop: "12px"`.
+- Tailwind arbitrary spacing values such as `p-[18px]` or `gap-[13px]`.
+
+Acceptable patterns:
+
+- Use spacing tokens, theme values, or standard spacing scale classes such as `p-4`, `mt-3`, or `gap-2`.
 
 ## UX001 Missing Empty State
 

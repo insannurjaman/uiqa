@@ -2,7 +2,7 @@ export function DashboardBad() {
   const { data } = useQuery();
 
   return (
-    <main className="min-w-[960px] p-8">
+    <main className="min-w-[960px] p-[18px]">
       <div className="flex flex-row gap-4">
         {data.cards.map((card) => (
           <article key={card.id} className="w-[420px] border p-4">
@@ -21,6 +21,9 @@ export function DashboardBad() {
           ))}
         </tbody>
       </table>
+      <button className="mt-8">
+        <SettingsIcon />
+      </button>
     </main>
   );
 }

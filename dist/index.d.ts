@@ -60,8 +60,16 @@ declare const rules: Rule[];
 
 declare const uxRules: Rule[];
 
+declare const imageMissingAltRule: Rule;
+
+declare const interactiveMissingAccessibleLabelRule: Rule;
+
+declare const hardcodedHexColorRule: Rule;
+
+declare const inconsistentSpacingTokenRule: Rule;
+
 declare function formatJson(result: ScanResult): string;
 
 declare function formatMarkdown(result: ScanResult, cwd?: string): string;
 
-export { DEFAULT_CONFIG, type Finding, type FindingCategory, type FindingSeverity, type Rule, type RuleContext, type ScanConfig, type ScanResult, discoverFiles, formatJson, formatMarkdown, loadConfig, parseSource, rules, scan, uxRules };
+export { DEFAULT_CONFIG, type Finding, type FindingCategory, type FindingSeverity, type Rule, type RuleContext, type ScanConfig, type ScanResult, discoverFiles, formatJson, formatMarkdown, hardcodedHexColorRule, imageMissingAltRule, inconsistentSpacingTokenRule, interactiveMissingAccessibleLabelRule, loadConfig, parseSource, rules, scan, uxRules };

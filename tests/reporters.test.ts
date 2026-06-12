@@ -41,8 +41,10 @@ describe("reporters", () => {
   });
 
   it("formats parseable JSON", () => {
-    const parsed = JSON.parse(formatJson(result)) as ScanResult;
+    const parsed = JSON.parse(formatJson(result)) as { filesScanned: number; score: number; findings: ScanResult["findings"] };
 
+    expect(parsed.filesScanned).toBe(1);
+    expect(parsed.score).toBe(85);
     expect(parsed.findings[0]?.ruleId).toBe("A11Y001");
   });
 });

@@ -21,6 +21,7 @@ type Rule = {
 - Keep the heuristic deterministic.
 - Prefer AST checks over raw string checks when practical.
 - Return a clear message and a practical suggestion.
+- Include the rule id, severity, category, file path, message, and suggestion in every finding.
 - Include a line number when the AST node has location data.
 - Avoid reporting many duplicate findings from the same root cause.
 - Add focused tests with one bad fixture and one good fixture.

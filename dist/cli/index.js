@@ -150,6 +150,91 @@ function hasMeaningfulAlt(attribute) {
   return true;
 }
 
+// src/rules/interactive-missing-accessible-label.ts
+import * as t2 from "@babel/types";
+var INTERACTIVE_ELEMENTS = /* @__PURE__ */ new Set(["button", "a"]);
+var LABEL_PROPS = /* @__PURE__ */ new Set(["aria-label", "aria-labelledby", "title"]);
+var interactiveMissingAccessibleLabelRule = {
+  id: "A11Y002",
+  title: "Interactive element missing accessible label",
+  category: "accessibility",
+  severity: "high",
+  run(context) {
+    const findings = [];
+    traverse(context.ast, {
+      JSXElement(path4) {
+        const opening = path4.node.openingElement;
+        const name = getElementName(opening);
+        if (!name || !isInteractiveElement(name, opening)) {
+          return;
+        }
+        if (hasAccessibleLabel(path4.node)) {
+          return;
+        }
+        findings.push({
+          ruleId: interactiveMissingAccessibleLabelRule.id,
+          title: interactiveMissingAccessibleLabelRule.title,
+          severity: interactiveMissingAccessibleLabelRule.severity,
+          filePath: context.filePath,
+          line: opening.loc?.start.line,
+          column: opening.loc ? opening.loc.start.column + 1 : void 0,
+          message: "Interactive elements need an accessible name so assistive technology can describe the action.",
+          suggestion: "Add visible text, aria-label, aria-labelledby, or a title that clearly names the action.",
+          category: interactiveMissingAccessibleLabelRule.category
+        });
+      }
+    });
+    return findings;
+  }
+};
+function isInteractiveElement(name, opening) {
+  if (INTERACTIVE_ELEMENTS.has(name)) {
+    return true;
+  }
+  const role = getAttributeText(opening, "role");
+  return role === "button" || role === "link";
+}
+function hasAccessibleLabel(node) {
+  if (node.openingElement.attributes.some((attribute) => t2.isJSXAttribute(attribute) && t2.isJSXIdentifier(attribute.name) && LABEL_PROPS.has(attribute.name.name))) {
+    return true;
+  }
+  return node.children.some((child) => {
+    if (t2.isJSXText(child)) {
+      return child.value.trim().length > 0;
+    }
+    if (t2.isJSXExpressionContainer(child)) {
+      return !t2.isJSXEmptyExpression(child.expression) && !isIconOnlyExpression(child.expression);
+    }
+    if (t2.isJSXElement(child)) {
+      const childName = getElementName(child.openingElement);
+      if (childName && /icon$/i.test(childName)) {
+        return false;
+      }
+      return hasAccessibleLabel(child);
+    }
+    return false;
+  });
+}
+function isIconOnlyExpression(expression) {
+  return t2.isIdentifier(expression) && /icon$/i.test(expression.name);
+}
+function getElementName(opening) {
+  if (t2.isJSXIdentifier(opening.name)) {
+    return opening.name.name;
+  }
+  if (t2.isJSXMemberExpression(opening.name) && t2.isJSXIdentifier(opening.name.property)) {
+    return opening.name.property.name;
+  }
+  return void 0;
+}
+function getAttributeText(opening, name) {
+  const attribute = opening.attributes.find((attr) => t2.isJSXAttribute(attr) && t2.isJSXIdentifier(attr.name) && attr.name.name === name);
+  if (!attribute?.value || !t2.isStringLiteral(attribute.value)) {
+    return "";
+  }
+  return attribute.value.value;
+}
+
 // src/rules/hardcoded-hex-color.ts
 var HEX_COLOR_PATTERN = /#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})\b/;
 var hardcodedHexColorRule = {
@@ -198,8 +283,75 @@ var hardcodedHexColorRule = {
   }
 };
 
+// src/rules/inconsistent-spacing-token.ts
+import * as t3 from "@babel/types";
+var SPACING_PROPERTY_PATTERN = /^(m|p|margin|padding|gap|top|right|bottom|left|inset)(x|y|t|r|b|l)?$/i;
+var RAW_PIXEL_PATTERN = /\b(?:margin|padding|gap|top|right|bottom|left|inset|width|height|minWidth|minHeight|maxWidth|maxHeight)\s*:\s*["']?\d+px\b/i;
+var TAILWIND_ARBITRARY_SPACING_PATTERN = /\b(?:m|p|gap|space|top|right|bottom|left|inset|w|h|min-w|min-h|max-w|max-h)(?:[trblxy])?-\[\d+px\]/;
+var inconsistentSpacingTokenRule = {
+  id: "DS002",
+  title: "Inconsistent spacing token usage",
+  category: "design-system",
+  severity: "medium",
+  run(context) {
+    const findings = [];
+    const seen = /* @__PURE__ */ new Set();
+    traverse(context.ast, {
+      StringLiteral(path4) {
+        reportIfRawSpacing(path4.node, path4.node.value);
+      },
+      TemplateElement(path4) {
+        reportIfRawSpacing(path4.node, path4.node.value.raw);
+      },
+      ObjectProperty(path4) {
+        const keyName = getObjectKeyName(path4.node.key);
+        if (!keyName || !SPACING_PROPERTY_PATTERN.test(keyName)) {
+          return;
+        }
+        const value = path4.node.value;
+        if (t3.isNumericLiteral(value) || t3.isStringLiteral(value) && /\d+px/.test(value.value)) {
+          report(path4.node);
+        }
+      }
+    });
+    function reportIfRawSpacing(node, value) {
+      if (RAW_PIXEL_PATTERN.test(value) || TAILWIND_ARBITRARY_SPACING_PATTERN.test(value)) {
+        report(node);
+      }
+    }
+    function report(node) {
+      const key = `${node.loc?.start.line ?? "?"}:${node.loc?.start.column ?? "?"}`;
+      if (seen.has(key)) {
+        return;
+      }
+      seen.add(key);
+      findings.push({
+        ruleId: inconsistentSpacingTokenRule.id,
+        title: inconsistentSpacingTokenRule.title,
+        severity: inconsistentSpacingTokenRule.severity,
+        filePath: context.filePath,
+        line: node.loc?.start.line,
+        column: node.loc ? node.loc.start.column + 1 : void 0,
+        message: "Raw spacing values make layout rhythm harder to keep consistent across the product.",
+        suggestion: "Use a design-system spacing token, scale class, or shared theme value instead of ad hoc pixel spacing.",
+        category: inconsistentSpacingTokenRule.category
+      });
+    }
+    return findings.slice(0, 1);
+  }
+};
+function getObjectKeyName(key) {
+  if (t3.isIdentifier(key)) {
+    return key.name;
+  }
+  if (t3.isStringLiteral(key)) {
+    return key.value;
+  }
+  return "";
+}
+
 // src/rules/ux/helpers.ts
-import * as t2 from "@babel/types";
+import * as t4 from "@babel/types";
 var EMPTY_STATE_KEYWORDS = ["empty", "no items", "no results", "no data", "nothing", "start by", "get started"];
 var LOADING_KEYWORDS = ["loading", "isloading", "pending", "ispending", "skeleton", "spinner", "aria-busy"];
 var ERROR_KEYWORDS = ["error", "alert", "failed", "failure", "try again", "unable to", "problem"];
@@ -226,51 +378,51 @@ function hasAnyKeyword(value, keywords) {
   return keywords.some((keyword) => normalized.includes(keyword));
 }
 function getJsxElementName(node) {
-  if (t2.isJSXIdentifier(node.name)) {
+  if (t4.isJSXIdentifier(node.name)) {
     return node.name.name;
   }
-  if (t2.isJSXMemberExpression(node.name) && t2.isJSXIdentifier(node.name.property)) {
+  if (t4.isJSXMemberExpression(node.name) && t4.isJSXIdentifier(node.name.property)) {
     return node.name.property.name;
   }
   return void 0;
 }
 function getJsxAttribute(node, name) {
   return node.attributes.find((attribute) => {
-    return t2.isJSXAttribute(attribute) && t2.isJSXIdentifier(attribute.name) && attribute.name.name === name;
+    return t4.isJSXAttribute(attribute) && t4.isJSXIdentifier(attribute.name) && attribute.name.name === name;
   });
 }
 function getJsxAttributeText(attribute) {
   if (!attribute?.value) {
     return "";
   }
-  if (t2.isStringLiteral(attribute.value)) {
+  if (t4.isStringLiteral(attribute.value)) {
     return attribute.value.value;
   }
-  if (t2.isJSXExpressionContainer(attribute.value)) {
+  if (t4.isJSXExpressionContainer(attribute.value)) {
     const expression = attribute.value.expression;
-    if (t2.isStringLiteral(expression)) {
+    if (t4.isStringLiteral(expression)) {
       return expression.value;
     }
-    if (t2.isTemplateLiteral(expression)) {
+    if (t4.isTemplateLiteral(expression)) {
       return expression.quasis.map((quasi) => quasi.value.raw).join(" ");
     }
   }
   return "";
 }
 function getCallName(node) {
-  if (t2.isIdentifier(node.callee)) {
+  if (t4.isIdentifier(node.callee)) {
     return node.callee.name;
   }
-  if (t2.isMemberExpression(node.callee) && t2.isIdentifier(node.callee.property)) {
+  if (t4.isMemberExpression(node.callee) && t4.isIdentifier(node.callee.property)) {
     return node.callee.property.name;
   }
   return "";
 }
 function getIdentifierName(node) {
-  if (t2.isIdentifier(node)) {
+  if (t4.isIdentifier(node)) {
     return node.name;
   }
-  if (t2.isJSXIdentifier(node)) {
+  if (t4.isJSXIdentifier(node)) {
     return node.name;
   }
   return "";
@@ -332,7 +484,7 @@ var checkoutMissingTrustRecoveryRule = {
 };
 
 // src/rules/ux/destructive-action-missing-confirmation.ts
-import * as t3 from "@babel/types";
+import * as t5 from "@babel/types";
 var DESTRUCTIVE_PATTERN = /\b(delete|remove|destroy|cancel|discard|archive)\b/i;
 var destructiveActionMissingConfirmationRule = {
   id: "UX006",
@@ -347,7 +499,7 @@ var destructiveActionMissingConfirmationRule = {
     traverse(context.ast, {
       JSXElement(path4) {
         const opening = path4.node.openingElement;
-        const label = path4.node.children.map((child) => t3.isJSXText(child) ? child.value : "").join(" ");
+        const label = path4.node.children.map((child) => t5.isJSXText(child) ? child.value : "").join(" ");
         const ariaLabel = getJsxAttributeText(getJsxAttribute(opening, "aria-label"));
         if (DESTRUCTIVE_PATTERN.test(`${label} ${ariaLabel}`)) {
           findings.push(
@@ -412,7 +564,7 @@ var formMissingFeedbackRule = {
 };
 
 // src/rules/ux/missing-empty-state.ts
-import * as t4 from "@babel/types";
+import * as t6 from "@babel/types";
 var missingEmptyStateRule = {
   id: "UX001",
   title: "Missing empty state",
@@ -425,7 +577,7 @@ var missingEmptyStateRule = {
     const findings = [];
     traverse(context.ast, {
       CallExpression(path4) {
-        if (t4.isMemberExpression(path4.node.callee) && t4.isIdentifier(path4.node.callee.property, { name: "map" })) {
+        if (t6.isMemberExpression(path4.node.callee) && t6.isIdentifier(path4.node.callee.property, { name: "map" })) {
           findings.push(
             createRuleFinding(
               missingEmptyStateRule,
@@ -545,7 +697,7 @@ var missingLoadingStateRule = {
 };
 
 // src/rules/ux/mobile-layout-risk.ts
-import * as t5 from "@babel/types";
+import * as t7 from "@babel/types";
 var FIXED_WIDTH_PATTERN = /\b(width|minWidth)\s*:\s*["']?([4-9]\d{2,}|\d{4,})px|w-\[[4-9]\d{2,}px\]|min-w-\[[4-9]\d{2,}px\]|min-w-(?:96|screen|full)/;
 var HORIZONTAL_RISK_PATTERN = /\bflex-row\b|\bwhitespace-nowrap\b|\boverflow-hidden\b/;
 var mobileLayoutRiskRule = {
@@ -584,9 +736,9 @@ var mobileLayoutRiskRule = {
         }
       },
       ObjectProperty(path4) {
-        const keyName = t5.isIdentifier(path4.node.key) || t5.isStringLiteral(path4.node.key) ? "name" in path4.node.key ? path4.node.key.name : path4.node.key.value : "";
+        const keyName = t7.isIdentifier(path4.node.key) || t7.isStringLiteral(path4.node.key) ? "name" in path4.node.key ? path4.node.key.name : path4.node.key.value : "";
         const value = path4.node.value;
-        if (!hasResponsiveCue && (keyName === "width" || keyName === "minWidth") && t5.isNumericLiteral(value) && value.value >= 400) {
+        if (!hasResponsiveCue && (keyName === "width" || keyName === "minWidth") && t7.isNumericLiteral(value) && value.value >= 400) {
           findings.push(
             createRuleFinding(
               mobileLayoutRiskRule,
@@ -604,7 +756,7 @@ var mobileLayoutRiskRule = {
 };
 
 // src/rules/ux/search-missing-no-result-state.ts
-import * as t6 from "@babel/types";
+import * as t8 from "@babel/types";
 var searchMissingNoResultStateRule = {
   id: "UX004",
   title: "Search UI missing no-result state",
@@ -633,7 +785,7 @@ var searchMissingNoResultStateRule = {
         }
       },
       CallExpression(path4) {
-        if (t6.isMemberExpression(path4.node.callee) && t6.isIdentifier(path4.node.callee.property, { name: "filter" })) {
+        if (t8.isMemberExpression(path4.node.callee) && t8.isIdentifier(path4.node.callee.property, { name: "filter" })) {
           findings.push(
             createRuleFinding(
               searchMissingNoResultStateRule,
@@ -663,7 +815,7 @@ var uxRules = [
 ];
 
 // src/rules/index.ts
-var rules = [imageMissingAltRule, hardcodedHexColorRule, ...uxRules];
+var rules = [imageMissingAltRule, interactiveMissingAccessibleLabelRule, hardcodedHexColorRule, inconsistentSpacingTokenRule, ...uxRules];
 
 // src/core/scanner.ts
 async function scan(config, scanRules = rules, cwd = process.cwd()) {
@@ -682,12 +834,6 @@ async function scan(config, scanRules = rules, cwd = process.cwd()) {
     scannedFiles: files.length,
     findings
   };
-}
-
-// src/reporters/json.ts
-function formatJson(result) {
-  return `${JSON.stringify(result, null, 2)}
-`;
 }
 
 // src/reporters/markdown.ts
@@ -788,6 +934,21 @@ function formatLocation(finding, cwd) {
     return `${relativePath}:${finding.line}`;
   }
   return relativePath;
+}
+
+// src/reporters/json.ts
+function formatJson(result) {
+  return `${JSON.stringify(
+    {
+      filesScanned: result.scannedFiles,
+      score: calculateScore(result.findings),
+      findings: result.findings,
+      config: result.config
+    },
+    null,
+    2
+  )}
+`;
 }
 
 // src/cli/index.ts
