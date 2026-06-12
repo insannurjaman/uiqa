@@ -4,29 +4,37 @@ This document tracks UIQA release operations.
 
 ## v0.1.1 Current State
 
+- Release commit: `6dfadac9dd051109bc8269c701791436ac2452cf`
 - Package: `@insannurjaman/uiqa`
 - Version: `0.1.1`
 - Release purpose: patch npm package metadata so the `uiqa` binary is preserved during publish
 - GitHub release title: `UIQA v0.1.1 — npm package metadata fix`
 - GitHub release body: see `docs/release-v0.1.1.md`
-- npm publish status: pending verification and publish
-- npm package verification: pending `npm view @insannurjaman/uiqa@0.1.1 version`
-- Tag `v0.1.1`: pending creation after verification
+- Local tag `v0.1.1`: created
+- Remote tag `v0.1.1`: pushed to `origin`
+- GitHub release status: prepared only; `gh` is not installed in this environment
+- npm publish status: blocked by npm web authentication / 2FA during `npm publish --access public`
+- npm auth status: `npm whoami` returns `insannurjaman`
+- npm package verification: `npm view @insannurjaman/uiqa@0.1.1 version` returns `E404`, so it is not published yet
+- Package smoke test: passed from packed tarball; `npx uiqa --help` and `npx uiqa scan --path /Users/insannurjaman/Documents/Development/uiqa/examples --format markdown` both worked
 - Product behavior: no rule, scanner, reporter, or GitHub Action behavior changes from v0.1.0
 
-## v0.1.1 Publish Plan
+## v0.1.1 Verification Snapshot
+
+- `pnpm install`: passed
+- `pnpm typecheck`: passed
+- `pnpm test`: passed, 34 tests
+- `pnpm build`: passed
+- `pnpm uiqa scan --path ./examples --format markdown`: passed
+- `pnpm uiqa scan --path ./examples --format json`: passed
+- `pnpm pack --dry-run`: passed
+- `npm publish --dry-run --access public`: passed without the previous `bin[uiqa]` warning
+- Dry-run tarball: `insannurjaman-uiqa-0.1.1.tgz`
+- Packed manifest bin: `{ "uiqa": "dist/cli/index.js" }`
+
+## v0.1.1 Remaining Publish Steps
 
 ```bash
-pnpm install
-pnpm typecheck
-pnpm test
-pnpm build
-pnpm uiqa scan --path ./examples --format markdown
-pnpm uiqa scan --path ./examples --format json
-pnpm pack --dry-run
-git tag v0.1.1
-git push origin main
-git push origin v0.1.1
 npm whoami
 npm view @insannurjaman/uiqa@0.1.1 version
 npm publish --access public
@@ -38,6 +46,23 @@ If npm requires OTP, publish with:
 ```bash
 npm publish --access public --otp <one-time-password>
 ```
+
+If npm starts a browser authentication flow, complete the npm browser approval and rerun:
+
+```bash
+npm publish --access public
+npm view @insannurjaman/uiqa@0.1.1 version
+```
+
+## v0.1.1 Manual GitHub Release Steps
+
+Use these steps because GitHub CLI is unavailable in this environment.
+
+1. Open `https://github.com/insannurjaman/uiqa/releases/new`.
+2. Select existing tag `v0.1.1`.
+3. Release title: `UIQA v0.1.1 — npm package metadata fix`.
+4. Paste the release body from `docs/release-v0.1.1.md`.
+5. Publish as a normal release.
 
 ## v0.1.0 Historical State
 
