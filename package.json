@@ -1,0 +1,46 @@
+{
+  "name": "uiqa",
+  "version": "0.1.0",
+  "description": "Open-source UI/UX QA CLI and GitHub Action for modern front-end teams.",
+  "type": "module",
+  "bin": {
+    "uiqa": "./dist/cli/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "uiqa": "node dist/cli/index.js",
+    "test": "vitest run",
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit"
+  },
+  "keywords": [
+    "ui",
+    "ux",
+    "qa",
+    "accessibility",
+    "design-system"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/parser": "^7.26.3",
+    "@babel/traverse": "^7.26.4",
+    "@babel/types": "^7.26.3",
+    "commander": "^12.1.0",
+    "fast-glob": "^3.3.2",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/babel__traverse": "^7.20.6",
+    "@types/node": "^22.10.2",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "packageManager": "pnpm@9.15.2"
+}
